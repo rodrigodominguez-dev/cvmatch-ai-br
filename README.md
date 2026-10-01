@@ -65,3 +65,12 @@ A demonstração usou vaga e currículo fictícios. Correspondências e lacunas 
 
 - Aplicação publicada: [https://cvmatch-ai-br.lovable.app/](https://cvmatch-ai-br.lovable.app/)
 - Repositório GitHub: [https://github.com/rodrigodominguez-dev/cvmatch-ai-br](https://github.com/rodrigodominguez-dev/cvmatch-ai-br)
+
+
+## Evoluções recentes
+
+O produto agora prioriza vagas de tecnologia, com exemplos fictícios para Desenvolvimento, Dados, QA e Infraestrutura. As instruções da análise evitam presumir senioridade ou inferir uma tecnologia a partir de outra, e há uma proteção adicional para não incluir competências não comprovadas no currículo ajustado.
+
+Além de copiar e exportar em PDF, o currículo ajustado pode ser baixado em .docx editável, com formatação simples em uma coluna. Foram adicionados títulos e descrições específicos por página, metadados para compartilhamento, dados estruturados para mecanismos de busca, .sitemap.xml e regras em .robots.txt. As páginas pessoais de resultado não são destinadas à indexação.
+
+A aplicação continua sem login e sem guardar currículos no servidor; os textos permanecem no navegador, embora sejam enviados à IA para gerar a análise. O alinhamento é textual e não prevê entrevistas, contratação ou posição em rankings.
