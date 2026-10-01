@@ -1,26 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteShell } from "@/components/site-shell";
-
-export const Route = createFileRoute("/como-funciona")({
-  head: () => ({
-    meta: [
-      { title: "Como funciona — CVMatch AI" },
-      {
-        name: "description",
-        content:
-          "Entenda os quatro passos do CVMatch AI e a regra que impede a criação de experiências que você não tem.",
-      },
-      { property: "og:title", content: "Como funciona — CVMatch AI" },
-      {
-        property: "og:description",
-        content: "Os quatro passos da análise e a regra de nunca inventar experiência.",
-      },
-      { property: "og:type", content: "article" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
-  component: ComoFunciona,
-});
+import { breadcrumb, pageHead } from "@/lib/seo";
 
 const passos = [
   ["01 — Cole a vaga", "Insira a descrição completa da oportunidade."],
@@ -35,6 +15,32 @@ const passos = [
   ],
 ];
 
+export const Route = createFileRoute("/como-funciona")({
+  head: () =>
+    pageHead({
+      path: "/como-funciona",
+      title: "Como funciona — CVMatch AI para vagas de tecnologia",
+      description:
+        "Os quatro passos da análise de currículo para vagas de tecnologia, os limites do indicador de alinhamento e a regra de nunca inventar experiência.",
+      type: "article",
+      jsonLd: [
+        breadcrumb([
+          { name: "Início", path: "/" },
+          { name: "Como funciona", path: "/como-funciona" },
+        ]),
+        {
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: "Como alinhar seu currículo a uma vaga de tecnologia com o CVMatch AI",
+          inLanguage: "pt-BR",
+          step: passos.map(([name, text], i) => ({ "@type": "HowToStep", position: i + 1, name, text })),
+        },
+      ],
+    }),
+  component: ComoFunciona,
+});
+
+
 function ComoFunciona() {
   return (
     <SiteShell>
@@ -42,7 +48,9 @@ function ComoFunciona() {
         <h1 className="text-3xl font-semibold tracking-tight text-foreground">Como funciona</h1>
         <p className="mt-3 text-base leading-relaxed text-muted-foreground">
           O CVMatch AI compara o texto da vaga com o texto do seu currículo e mostra onde os dois
-          conversam — e onde não conversam.
+          conversam — e onde não conversam. Ele foi pensado para vagas de desenvolvimento, dados, QA
+          e infraestrutura, mas não presume sua senioridade nem quais tecnologias você domina: só
+          considera o que está escrito.
         </p>
 
         <ol className="mt-10 space-y-4">
@@ -64,6 +72,18 @@ function ComoFunciona() {
             aparece no seu currículo, ele é apresentado como{" "}
             <strong className="text-foreground">“Não identificada no currículo”</strong> — e não é
             incluído na versão ajustada.
+          </p>
+        </section>
+
+        <section className="mt-6 rounded-xl border border-border bg-card p-6 shadow-sm">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">
+            Limites do resultado
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+            O “alinhamento identificado” mede apenas a correspondência textual entre vaga e currículo.
+            Ele não prevê aprovação, não garante entrevista ou emprego e não representa posição em
+            nenhum ranking. O currículo ajustado pode ser baixado em Word (.docx) editável, PDF ou
+            copiado como texto — revise sempre antes de enviar.
           </p>
         </section>
 

@@ -13,3 +13,5 @@
 
 - Toda chamada de IA passa por `src/lib/cvmatch.functions.ts` (server functions) usando o helper `src/lib/ai-gateway.server.ts`, para que a chave do gateway nunca chegue ao navegador.
 - O resultado da análise e o histórico ficam só em `localStorage` (`src/lib/cvmatch.ts`); não há banco de dados nem login no MVP.
+- Exportação .docx é gerada no navegador (`src/lib/resume-docx.ts`, pacote docx carregado sob demanda), para que o currículo não saia do navegador.
+- SEO por página via `pageHead()` em `src/lib/seo.ts` (canonical, OG, JSON-LD); sitemap estático em `public/sitemap.xml`.
