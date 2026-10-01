@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /resultado
 
 Sitemap: https://cvmatch-ai-br.lovable.app/sitemap.xml

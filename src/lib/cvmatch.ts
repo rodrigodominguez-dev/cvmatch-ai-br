@@ -193,3 +193,116 @@ Análise e Desenvolvimento de Sistemas — Faculdade fictícia Horizonte (2022 -
 
 Competências
 Python, HTML, CSS, JavaScript, Git, PostgreSQL`;
+
+export type Exemplo = { id: string; area: string; vaga: string; curriculo: string };
+
+export const EXEMPLOS: Exemplo[] = [
+  { id: "dev", area: "Desenvolvimento", vaga: DEMO_VAGA, curriculo: DEMO_CURRICULO },
+  {
+    id: "dados",
+    area: "Dados",
+    vaga: `Analista de Dados — Empresa fictícia Mapa Claro (dados de demonstração)
+
+Atuação na construção de relatórios e análises para áreas de negócio.
+
+Requisitos:
+- SQL
+- Python com Pandas
+- Power BI
+- Modelagem de dados
+- Comunicação de resultados para áreas não técnicas
+
+Desejável:
+- dbt
+- Airflow`,
+    curriculo: `Bruno Fictício Souza (perfil fictício para demonstração)
+Belo Horizonte, MG | bruno.ficticio@email.ficticio
+
+Resumo
+Profissional com atuação em análise de indicadores e relatórios operacionais.
+
+Experiência
+Assistente de Planejamento — Empresa fictícia Rota Azul (2023 - 2025)
+- Elaboração de relatórios semanais em Excel e Power BI
+- Consultas SQL para extração de dados de vendas
+- Apresentação de indicadores para a equipe comercial
+
+Formação
+Estatística — Universidade fictícia Serra (2019 - 2023)
+
+Competências
+SQL, Excel, Power BI, Python (básico)`,
+  },
+  {
+    id: "qa",
+    area: "QA",
+    vaga: `Analista de QA — Empresa fictícia Teste Certo (dados de demonstração)
+
+Responsável por garantir a qualidade de aplicações web e mobile.
+
+Requisitos:
+- Testes manuais e elaboração de casos de teste
+- Testes automatizados com Cypress
+- Testes de API com Postman
+- Registro de defeitos no Jira
+- Metodologias ágeis (Scrum)
+
+Desejável:
+- Playwright
+- Integração contínua`,
+    curriculo: `Carla Exemplo Lima (perfil fictício para demonstração)
+Curitiba, PR | carla.exemplo@email.ficticio
+
+Resumo
+Profissional de testes com experiência em validação de sistemas web.
+
+Experiência
+Analista de Testes Júnior — Empresa fictícia Ponto Digital (2023 - 2025)
+- Escrita e execução de casos de teste manuais
+- Registro e acompanhamento de defeitos no Jira
+- Testes de API com Postman
+- Participação em cerimônias Scrum
+
+Formação
+Sistemas de Informação — Faculdade fictícia Vale (2019 - 2023)
+
+Competências
+Testes manuais, Jira, Postman, Scrum`,
+  },
+  {
+    id: "infra",
+    area: "Infraestrutura",
+    vaga: `Analista de Infraestrutura / DevOps — Empresa fictícia Nuvem Firme (dados de demonstração)
+
+Suporte e evolução de ambientes em nuvem.
+
+Requisitos:
+- Linux
+- AWS
+- Docker
+- Terraform
+- Monitoramento de aplicações
+- Pipelines de CI/CD
+
+Desejável:
+- Kubernetes`,
+    curriculo: `Diego Teste Rocha (perfil fictício para demonstração)
+Recife, PE | diego.teste@email.ficticio
+
+Resumo
+Profissional de suporte com foco em servidores e redes.
+
+Experiência
+Técnico de Suporte em TI — Empresa fictícia Conecta (2022 - 2025)
+- Administração de servidores Linux
+- Criação de scripts em Bash para rotinas de backup
+- Monitoramento de serviços com Zabbix
+- Atendimento a chamados de rede
+
+Formação
+Redes de Computadores — Instituto fictício Litoral (2019 - 2021)
+
+Competências
+Linux, Bash, Zabbix, Redes TCP/IP`,
+  },
+];
