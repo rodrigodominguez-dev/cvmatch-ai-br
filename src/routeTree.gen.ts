@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalisarRouteImport } from './routes/analisar'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnalisarRoute = AnalisarRouteImport.update({
+  id: '/analisar',
+  path: '/analisar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
@@ -25,27 +31,31 @@ const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analisar': typeof AnalisarRoute
   '/como-funciona': typeof ComoFuncionaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analisar': typeof AnalisarRoute
   '/como-funciona': typeof ComoFuncionaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analisar': typeof AnalisarRoute
   '/como-funciona': typeof ComoFuncionaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/como-funciona'
+  fullPaths: '/' | '/analisar' | '/como-funciona'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/como-funciona'
-  id: '__root__' | '/' | '/como-funciona'
+  to: '/' | '/analisar' | '/como-funciona'
+  id: '__root__' | '/' | '/analisar' | '/como-funciona'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalisarRoute: typeof AnalisarRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/analisar': {
+      id: '/analisar'
+      path: '/analisar'
+      fullPath: '/analisar'
+      preLoaderRoute: typeof AnalisarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/como-funciona': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalisarRoute: AnalisarRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
 }
 export const routeTree = rootRouteImport
