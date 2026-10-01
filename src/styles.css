@@ -150,3 +150,31 @@
     color: var(--color-foreground);
   }
 }
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  body :not(#curriculo-ajustado):not(#curriculo-ajustado *) {
+    visibility: hidden;
+  }
+
+  #curriculo-ajustado,
+  #curriculo-ajustado * {
+    visibility: visible;
+  }
+
+  #curriculo-ajustado {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  @page {
+    margin: 16mm;
+  }
+}
