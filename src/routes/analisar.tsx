@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { AlertTriangle, Loader2, Trash2 } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
 import { analisarCurriculo } from "@/lib/cvmatch.functions";
+import { breadcrumb, pageHead } from "@/lib/seo";
 import {
-  DEMO_CURRICULO,
-  DEMO_VAGA,
+  EXEMPLOS,
   ERRO_CAMPOS_VAZIOS,
   ERRO_CONTEUDO_CURTO,
   MIN_LENGTH,
@@ -19,23 +19,19 @@ import {
 } from "@/lib/cvmatch";
 
 export const Route = createFileRoute("/analisar")({
-  head: () => ({
-    meta: [
-      { title: "Analisar currículo — CVMatch AI" },
-      {
-        name: "description",
-        content:
-          "Cole a descrição da vaga e o seu currículo para ver palavras-chave encontradas, lacunas e sugestões de melhoria.",
-      },
-      { property: "og:title", content: "Analisar currículo — CVMatch AI" },
-      {
-        property: "og:description",
-        content: "Compare vaga e currículo e receba sugestões baseadas só na sua experiência real.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/analisar",
+      title: "Analisar currículo para vaga de tecnologia — CVMatch AI",
+      description:
+        "Cole uma vaga de desenvolvimento, dados, QA ou infraestrutura e seu currículo para ver tecnologias encontradas, não identificadas e sugestões baseadas só na sua experiência real.",
+      jsonLd: [
+        breadcrumb([
+          { name: "Início", path: "/" },
+          { name: "Analisar currículo", path: "/analisar" },
+        ]),
+      ],
+    }),
   component: Analisar,
 });
 
@@ -164,19 +160,27 @@ function Analisar() {
               {carregando && <Loader2 className="size-4 animate-spin" aria-hidden />}
               {carregando ? "Analisando..." : "Analisar currículo"}
             </button>
-            <button
-              type="button"
-              disabled={carregando}
-              onClick={() => {
-                setVaga(DEMO_VAGA);
-                setCurriculo(DEMO_CURRICULO);
-                setErro(null);
-              }}
-              className="inline-flex items-center justify-center rounded-md border border-input bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-60"
-            >
-              Carregar exemplo fictício
-            </button>
+            <span className="text-sm text-muted-foreground">Carregar exemplo fictício:</span>
+            {EXEMPLOS.map((ex) => (
+              <button
+                key={ex.id}
+                type="button"
+                disabled={carregando}
+                onClick={() => {
+                  setVaga(ex.vaga);
+                  setCurriculo(ex.curriculo);
+                  setErro(null);
+                }}
+                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:opacity-60"
+              >
+                {ex.area}
+              </button>
+            ))}
           </div>
+          <p className="text-xs text-muted-foreground">
+            Funciona melhor com vagas de desenvolvimento, dados, QA e infraestrutura. Os exemplos
+            usam pessoas e empresas fictícias.
+          </p>
         </form>
 
         {historico.length > 0 && (

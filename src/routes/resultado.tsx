@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { Check, Copy, Download, Loader2, RotateCcw, Sparkles } from "lucide-react";
+import { Check, Copy, Download, FileText, Loader2, RotateCcw, Sparkles } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { pageHead } from "@/lib/seo";
 import { ResumeView } from "@/components/resume-view";
 import { gerarCurriculoAjustado } from "@/lib/cvmatch.functions";
 import {
@@ -15,24 +16,14 @@ import {
 } from "@/lib/cvmatch";
 
 export const Route = createFileRoute("/resultado")({
-  head: () => ({
-    meta: [
-      { title: "Resultado da análise — CVMatch AI" },
-      {
-        name: "description",
-        content:
-          "Resumo do alinhamento, palavras-chave encontradas, lacunas, sugestões e currículo ajustado pronto para exportar.",
-      },
-      { property: "og:title", content: "Resultado da análise — CVMatch AI" },
-      {
-        property: "og:description",
-        content: "Veja o alinhamento entre currículo e vaga e gere a versão ajustada.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "robots", content: "noindex" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/resultado",
+      title: "Resultado da análise — CVMatch AI",
+      description:
+        "Alinhamento textual, palavras-chave encontradas e não identificadas, sugestões e currículo ajustado para exportar em Word, PDF ou texto.",
+      noindex: true,
+    }),
   component: Resultado,
 });
 
@@ -107,6 +98,16 @@ function Resultado() {
       setErro("Não foi possível gerar o currículo ajustado agora. Tente novamente.");
     } finally {
       setGerando(false);
+    }
+  }
+
+  async function onDocx() {
+    if (!dados?.curriculoAjustado) return;
+    try {
+      const { downloadResumeDocx } = await import("@/lib/resume-docx");
+      await downloadResumeDocx(dados.curriculoAjustado);
+    } catch {
+      setErro("Não foi possível gerar o arquivo Word agora. Tente novamente.");
     }
   }
 
@@ -336,6 +337,14 @@ function Resultado() {
                 </button>
                 {dados.curriculoAjustado && (
                   <>
+                    <button
+                      type="button"
+                      onClick={onDocx}
+                      className="inline-flex items-center gap-2 rounded-md border border-input bg-background px-5 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                    >
+                      <FileText className="size-4" aria-hidden />
+                      Baixar Word (.docx)
+                    </button>
                     <button
                       type="button"
                       onClick={() => window.print()}

@@ -7,12 +7,35 @@ const inputSchema = z.object({
   curriculo: z.string().min(50).max(20000),
 });
 
-const REGRA = `Você é um analista de currículos em português do Brasil.
+const REGRA = `Você é um analista de currículos em português do Brasil especializado em vagas de tecnologia (desenvolvimento de software, dados, QA/testes e infraestrutura/DevOps/cloud).
 
-REGRA ABSOLUTA: nunca invente, suponha ou acrescente qualquer informação que não esteja escrita no currículo fornecido — nada de experiências, cargos, empresas, projetos, certificações, formações, habilidades, resultados, idiomas, tecnologias ou responsabilidades.
+REGRA ABSOLUTA: nunca invente, suponha ou acrescente qualquer informação que não esteja escrita no currículo fornecido — nada de experiências, cargos, empresas, projetos, certificações, formações, habilidades, resultados, métricas, idiomas, linguagens, frameworks, bancos de dados, ferramentas, serviços de nuvem ou responsabilidades.
+Não presuma senioridade (júnior, pleno, sênior) nem nível de domínio que o currículo não declare. Não deduza uma tecnologia a partir de outra (ex.: Python não implica Django; Docker não implica Kubernetes; SQL não implica PostgreSQL; AWS não implica Terraform).
 Você pode apenas reorganizar, reescrever com mais clareza, destacar e aproximar a terminologia do currículo à da vaga quando isso for verdadeiro segundo o próprio texto do currículo.
-Ignore termos genéricos como "empresa", "trabalho", "equipe", "experiência", "profissional" como se fossem palavras-chave.
+Ignore termos genéricos como "empresa", "trabalho", "equipe", "experiência", "profissional", "proatividade" como se fossem palavras-chave; priorize linguagens, frameworks, ferramentas, plataformas, práticas (testes, CI/CD, versionamento, metodologias ágeis) e domínios técnicos.
 Escreva tudo em português do Brasil.`;
+
+const normalizar = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+/**
+ * Proteção extra no servidor: mantém em competências/certificações/idiomas apenas itens
+ * cujas palavras significativas aparecem no currículo original. Assim, nenhuma tecnologia
+ * ausente entra no currículo ajustado, mesmo que o modelo erre.
+ */
+function filtrarItensSemEvidencia(curriculoOriginal: string, itens: string[]) {
+  const base = normalizar(curriculoOriginal);
+  return itens.filter((item) => {
+    const palavras = normalizar(item)
+      .split(/[^a-z0-9+#.]+/)
+      .map((p) => p.replace(/^\.+|\.+$/g, ""))
+      .filter((p) => p.length >= 2 && !["de", "da", "do", "em", "e", "com", "para"].includes(p));
+    return palavras.length > 0 && palavras.every((p) => base.includes(p));
+  });
+}
 
 const analysisJsonSchema = {
   type: "object",
@@ -160,7 +183,8 @@ Sua tarefa: comparar a descrição da vaga com o currículo.
 - "encontradas": termos relevantes da vaga que aparecem (de forma literal ou claramente equivalente) no currículo. Para cada um, copie um trecho literal do currículo como prova.
 - "possiveis": termos da vaga que podem ter correspondência indireta no currículo, explicando a dúvida em "observacao".
 - "nao_identificadas": termos relevantes da vaga sem nenhuma evidência no currículo.
-- "sugestoes": entre 4 e 7 sugestões de melhoria baseadas somente no que já existe no currículo, cada uma com o que melhorar, por que e como poderia ficar.
+- "sugestoes": entre 4 e 7 sugestões de melhoria baseadas somente no que já existe no currículo, cada uma com o que melhorar, por que e como poderia ficar. Foque em práticas de currículos de tecnologia: deixar explícitas as tecnologias já usadas em cada experiência, nomear a stack de forma consistente com a vaga (quando for a mesma tecnologia), descrever contexto e responsabilidades técnicas reais, organizar uma seção de competências técnicas legível por ATS. Nunca sugira incluir uma tecnologia não identificada; no máximo, lembre que ela só deve ser adicionada se a pessoa realmente tiver essa experiência. Em "como", use apenas fatos do currículo.
+- Toda tecnologia exigida ou desejável pela vaga sem evidência no currículo deve ir para "nao_identificadas".
 - "alinhamento": inteiro de 0 a 100 representando a correspondência textual.`,
         input: `=== DESCRIÇÃO DA VAGA ===\n${data.vaga}\n\n=== CURRÍCULO ===\n${data.curriculo}`,
       });
@@ -187,9 +211,14 @@ Sua tarefa: reescrever o currículo em uma versão mais clara, organizada e alin
 - Use exclusivamente informações presentes no currículo original.
 - Deixe campos nulos e listas vazias quando a informação não existir no currículo; nunca preencha com algo inventado.
 - Adapte o resumo profissional e as descrições de experiências reais, sem acrescentar competências ausentes.
-- Use terminologia da vaga apenas quando ela descrever com fidelidade algo que já está no currículo.`,
+- Use terminologia da vaga apenas quando ela descrever com fidelidade algo que já está no currículo.
+- Em "competencias", liste apenas tecnologias e competências técnicas escritas no currículo original, com a grafia usada nele. Tecnologias da vaga ausentes no currículo NUNCA entram.
+- Não acrescente nível de senioridade, anos de experiência ou métricas que não estejam no original.`,
           input: `=== DESCRIÇÃO DA VAGA ===\n${data.vaga}\n\n=== CURRÍCULO ORIGINAL ===\n${data.curriculo}`,
         });
+        curriculo.competencias = filtrarItensSemEvidencia(data.curriculo, curriculo.competencias);
+        curriculo.certificacoes = filtrarItensSemEvidencia(data.curriculo, curriculo.certificacoes);
+        curriculo.idiomas = filtrarItensSemEvidencia(data.curriculo, curriculo.idiomas);
         return { ok: true, curriculo };
       } catch (error) {
         if (error instanceof AiFriendlyError) return { ok: false, erro: error.message };
