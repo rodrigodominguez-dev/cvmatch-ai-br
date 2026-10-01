@@ -1,26 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck, ClipboardPaste, FileText, Search, Sparkles } from "lucide-react";
 import { SiteShell } from "@/components/site-shell";
+import { pageHead, softwareApplicationLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "CVMatch AI — Seu currículo alinhado à vaga" },
-      {
-        name: "description",
-        content:
-          "Compare seu currículo com uma vaga, veja palavras-chave encontradas e lacunas, receba sugestões e gere uma versão ajustada — sem inventar experiência.",
-      },
-      { property: "og:title", content: "CVMatch AI — Seu currículo alinhado à vaga" },
-      {
-        property: "og:description",
-        content:
-          "Compare currículo e vaga, identifique lacunas e gere uma versão mais alinhada ao processo seletivo.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    pageHead({
+      path: "/",
+      title: "CVMatch AI — currículo alinhado a vagas de tecnologia",
+      description:
+        "Compare seu currículo com vagas de desenvolvimento, dados, QA e infraestrutura. Veja tecnologias encontradas e não identificadas e gere uma versão ajustada sem inventar experiência.",
+      jsonLd: [softwareApplicationLd],
+    }),
   component: Index,
 });
 
@@ -69,8 +60,9 @@ function Index() {
               Seu currículo alinhado à vaga, sem inventar sua experiência.
             </p>
             <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-              Compare seu currículo com uma vaga, descubra quais palavras-chave estão presentes,
-              identifique lacunas e gere uma versão mais alinhada ao processo seletivo.
+              Feito para vagas de tecnologia — desenvolvimento, dados, QA e infraestrutura. Compare
+              seu currículo com a vaga, veja quais tecnologias e requisitos aparecem, quais não foram
+              identificados e gere uma versão mais clara, exportável em Word, PDF ou texto.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -117,8 +109,31 @@ function Index() {
           </h2>
           <p className="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
             O CVMatch AI melhora a forma como você apresenta sua experiência, mas nunca adiciona
-            qualificações que não estejam comprovadas no seu currículo.
+            qualificações que não estejam comprovadas no seu currículo. Se a vaga pede Docker e
+            seu currículo não menciona Docker, ele aparece como “Não identificada no currículo” e
+            fica fora da versão ajustada.
           </p>
+        </div>
+        <div className="mt-6 grid gap-5 md:grid-cols-2">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-foreground">O que o CVMatch AI faz</h2>
+            <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
+              <li>Compara o texto da vaga com o texto do seu currículo.</li>
+              <li>Mostra cada termo encontrado com o trecho do currículo que serve de prova.</li>
+              <li>Lista linguagens, ferramentas e práticas da vaga não identificadas.</li>
+              <li>Sugere como apresentar melhor o que você já fez.</li>
+              <li>Gera um currículo ajustado em formato simples, legível por sistemas de triagem (ATS).</li>
+            </ul>
+          </div>
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <h2 className="text-lg font-semibold text-foreground">O que ele não faz</h2>
+            <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-muted-foreground">
+              <li>Não garante entrevista, contratação ou posição em qualquer ranking.</li>
+              <li>Não presume senioridade nem acrescenta tecnologias, anos de experiência ou métricas.</li>
+              <li>O percentual de alinhamento é só correspondência textual, não uma previsão.</li>
+              <li>Não exige login e não guarda seus textos em servidor: o histórico fica no seu navegador.</li>
+            </ul>
+          </div>
         </div>
       </section>
     </SiteShell>
